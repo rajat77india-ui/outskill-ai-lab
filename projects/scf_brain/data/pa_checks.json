@@ -1,0 +1,420 @@
+{
+  "technology": "Palo Alto Firewall",
+  "checks_by_control": {
+    "NET-01": [
+      {
+        "check_id": "PA-NET01-001",
+        "check_name": "Security Zones Defined",
+        "binary_question": "Are security zones defined to segment the network?",
+        "pass_condition": "At least 3 distinct zones are configured (e.g., trust, untrust, DMZ)",
+        "fail_condition": "Only default zones exist or zones are not meaningfully segmented",
+        "evidence_source": "Zone Configuration Export",
+        "evidence_fields": ["zone name", "zone type", "interfaces", "protection profile"],
+        "severity": "high",
+        "remediation": "Define security zones aligned to network segments: trust (internal), untrust (internet), DMZ, management. Apply zone protection profiles."
+      },
+      {
+        "check_id": "PA-NET01-002",
+        "check_name": "Inter-Zone Deny Default Policy",
+        "binary_question": "Is the default inter-zone traffic policy set to deny?",
+        "pass_condition": "Default security policy denies all inter-zone traffic not explicitly permitted",
+        "fail_condition": "A catch-all allow rule exists at the bottom of the rulebase or default action is not deny",
+        "evidence_source": "Security Policy Export",
+        "evidence_fields": ["rule name", "source zone", "destination zone", "action", "position"],
+        "severity": "critical",
+        "remediation": "Remove catch-all allow rules. Enforce deny by default. Implement explicit allow rules for required business flows only."
+      }
+    ],
+    "NET-02": [
+      {
+        "check_id": "PA-NET02-001",
+        "check_name": "Any-Any-Any Allow Rule Exists",
+        "binary_question": "Does any active security rule permit any source, any destination, and any service?",
+        "pass_condition": "No active rule has source=any AND destination=any AND service=any with action=allow",
+        "fail_condition": "One or more active rules allow any source, any destination, any service",
+        "evidence_source": "Security Policy Export",
+        "evidence_fields": ["rule name", "source zone", "source address", "destination zone", "destination address", "application", "service", "action", "disabled"],
+        "severity": "critical",
+        "remediation": "Replace any-any-any allow rules with specific rules limited to required source zones, destination zones, applications, and services. Document business justification for each rule."
+      },
+      {
+        "check_id": "PA-NET02-002",
+        "check_name": "Stale Rules Exist (Zero Hit Count)",
+        "binary_question": "Do any active rules have zero hits in the last 90 days?",
+        "pass_condition": "No active rule has zero hit count after 90+ days of operation",
+        "fail_condition": "One or more active rules have not matched any traffic in 90 days",
+        "evidence_source": "Rule Hit Count Report",
+        "evidence_fields": ["rule name", "hit count", "last used date", "creation date"],
+        "severity": "medium",
+        "remediation": "Review rules with zero hits. Disable or remove rules with no business justification. For new rules, implement a 30-day review cycle."
+      },
+      {
+        "check_id": "PA-NET02-003",
+        "check_name": "Overly Broad Service Definitions",
+        "binary_question": "Do rules use application-default or specific services rather than 'any' service?",
+        "pass_condition": "All allow rules specify application or restrict service to application-default",
+        "fail_condition": "Rules use service=any without application identification restrictions",
+        "evidence_source": "Security Policy Export",
+        "evidence_fields": ["rule name", "application", "service"],
+        "severity": "high",
+        "remediation": "Replace service=any with application-based controls or specific port/protocol definitions. Enable App-ID on all rules."
+      },
+      {
+        "check_id": "PA-NET02-004",
+        "check_name": "Inbound Internet Rules to Internal Zone",
+        "binary_question": "Are there rules allowing direct inbound internet access to internal/trust zones?",
+        "pass_condition": "No rules allow untrust-to-trust traffic without explicit destination address restriction",
+        "fail_condition": "Rules permit inbound internet traffic to broad internal address ranges",
+        "evidence_source": "Security Policy Export",
+        "evidence_fields": ["rule name", "source zone", "destination zone", "destination address", "application", "action"],
+        "severity": "critical",
+        "remediation": "Restrict inbound internet traffic to specific published services in DMZ. Use NAT to expose only necessary services. Block direct inbound access to internal/trust zones."
+      }
+    ],
+    "NET-03": [
+      {
+        "check_id": "PA-NET03-001",
+        "check_name": "Threat Prevention Profile Not Attached",
+        "binary_question": "Are threat prevention security profiles attached to all allow rules that handle external or untrusted traffic?",
+        "pass_condition": "All allow rules handling external traffic have antivirus, anti-spyware, and vulnerability protection profiles attached",
+        "fail_condition": "One or more allow rules handling external/untrusted traffic have no threat prevention profile attached",
+        "evidence_source": "Security Policy Profile Export",
+        "evidence_fields": ["rule name", "source zone", "destination zone", "antivirus profile", "anti-spyware profile", "vulnerability profile", "url-filtering profile"],
+        "severity": "high",
+        "remediation": "Attach a security profile group containing antivirus, anti-spyware, vulnerability protection, and URL filtering profiles to all allow rules handling external or untrusted traffic."
+      },
+      {
+        "check_id": "PA-NET03-002",
+        "check_name": "Antivirus Profile Not Configured",
+        "binary_question": "Is an active antivirus security profile configured and applied?",
+        "pass_condition": "At least one antivirus profile exists with action=drop/reset on malware detections and is applied to relevant rules",
+        "fail_condition": "No antivirus profile exists or it is set to alert-only with no block action",
+        "evidence_source": "Security Profile Export",
+        "evidence_fields": ["profile name", "action on detection", "wildfire action", "applied to rules"],
+        "severity": "high",
+        "remediation": "Create a strict antivirus profile with action=drop for viruses and reset for spyware. Enable WildFire integration. Apply to all rules handling external or inter-zone traffic."
+      },
+      {
+        "check_id": "PA-NET03-003",
+        "check_name": "Vulnerability Protection Profile Missing",
+        "binary_question": "Is a vulnerability protection profile configured and applied to relevant rules?",
+        "pass_condition": "Vulnerability protection profile exists with block actions for critical and high severity threats",
+        "fail_condition": "No vulnerability protection profile or it only alerts on high/critical without blocking",
+        "evidence_source": "Security Profile Export",
+        "evidence_fields": ["profile name", "critical action", "high action", "medium action"],
+        "severity": "high",
+        "remediation": "Configure a strict vulnerability protection profile: critical=reset-both, high=reset-both, medium=drop. Apply to all perimeter and inter-zone allow rules."
+      }
+    ],
+    "NET-04": [
+      {
+        "check_id": "PA-NET04-001",
+        "check_name": "Traffic Logging Disabled on Rules",
+        "binary_question": "Is traffic logging enabled on all active security policy rules?",
+        "pass_condition": "All allow rules have log-end (and optionally log-start) enabled",
+        "fail_condition": "One or more allow rules have logging disabled",
+        "evidence_source": "Security Policy Export",
+        "evidence_fields": ["rule name", "log-start", "log-end", "log-forwarding"],
+        "severity": "high",
+        "remediation": "Enable log-end on all security policy allow rules. For high-sensitivity rules enable log-start also. Configure log forwarding profiles to send logs to SIEM."
+      },
+      {
+        "check_id": "PA-NET04-002",
+        "check_name": "Log Forwarding Profile Not Configured",
+        "binary_question": "Is a log forwarding profile configured to send logs to a SIEM or syslog server?",
+        "pass_condition": "A log forwarding profile exists, is configured with a SIEM/syslog destination, and is applied to security rules",
+        "fail_condition": "No log forwarding profile configured or profiles are not applied to security rules",
+        "evidence_source": "Log Forwarding Profile and Server Profile Export",
+        "evidence_fields": ["profile name", "syslog server", "match criteria", "applied to rules"],
+        "severity": "high",
+        "remediation": "Create a log forwarding profile with syslog server destinations pointing to your SIEM. Apply the profile to all security policy rules. Verify log receipt at the SIEM."
+      }
+    ],
+    "IAC-01": [
+      {
+        "check_id": "PA-IAC01-001",
+        "check_name": "Excessive Local Admin Accounts",
+        "binary_question": "Are local administrator accounts limited to the minimum required?",
+        "pass_condition": "Three or fewer local admin accounts exist; no shared admin accounts",
+        "fail_condition": "More than 5 local admin accounts or shared admin credentials exist",
+        "evidence_source": "Admin Account Configuration Export",
+        "evidence_fields": ["username", "role", "authentication profile", "last login", "account type"],
+        "severity": "medium",
+        "remediation": "Limit local admin accounts to break-glass/emergency use only. Integrate with RADIUS/LDAP for centralized authentication. Remove shared or service accounts with admin privileges."
+      },
+      {
+        "check_id": "PA-IAC01-002",
+        "check_name": "Default Admin Account Active",
+        "binary_question": "Is the default 'admin' account active or using the default password?",
+        "pass_condition": "Default admin account is renamed, disabled, or has a unique strong password",
+        "fail_condition": "Default 'admin' account exists and is active",
+        "evidence_source": "Admin Account Configuration Export",
+        "evidence_fields": ["username", "account status", "password hash"],
+        "severity": "critical",
+        "remediation": "Rename or disable the default admin account. Create named individual accounts for all administrators. Enforce strong password policy."
+      },
+      {
+        "check_id": "PA-IAC01-003",
+        "check_name": "Role-Based Access Control Not Enforced",
+        "binary_question": "Do administrator accounts have role-based access profiles rather than all superuser access?",
+        "pass_condition": "Admin accounts are assigned custom roles with least-privilege permissions",
+        "fail_condition": "All admin accounts have superuser or full administrative access",
+        "evidence_source": "Admin Account Configuration Export",
+        "evidence_fields": ["username", "role profile", "permissions"],
+        "severity": "medium",
+        "remediation": "Create custom admin role profiles that limit each admin to their required functional area (e.g., read-only, network-only, security-policy-only). Assign appropriate roles to each administrator."
+      }
+    ],
+    "IAC-07": [
+      {
+        "check_id": "PA-IAC07-001",
+        "check_name": "MFA Not Enforced for Admin Access",
+        "binary_question": "Is multi-factor authentication enforced for all administrator logins?",
+        "pass_condition": "All admin accounts use an authentication profile with MFA (RADIUS+OTP, SAML, certificate)",
+        "fail_condition": "Admin accounts use password-only authentication without MFA",
+        "evidence_source": "Admin Authentication Profile Export",
+        "evidence_fields": ["profile name", "authentication type", "MFA factor", "applied to admins"],
+        "severity": "critical",
+        "remediation": "Configure an authentication profile with RADIUS+OTP or SAML to enforce MFA. Apply the profile to all admin accounts. Disable password-only authentication for admin access."
+      },
+      {
+        "check_id": "PA-IAC07-002",
+        "check_name": "MFA Not Enforced for GlobalProtect VPN",
+        "binary_question": "Is MFA enforced for GlobalProtect VPN authentication?",
+        "pass_condition": "GlobalProtect gateway authentication profile requires MFA",
+        "fail_condition": "VPN authentication uses password-only or certificate-only without MFA",
+        "evidence_source": "GlobalProtect Gateway Configuration Export",
+        "evidence_fields": ["gateway name", "authentication profile", "MFA factor"],
+        "severity": "high",
+        "remediation": "Configure GlobalProtect to use an authentication profile with MFA. Integrate with RADIUS, SAML, or LDAP+OTP. Enforce certificate + credential authentication for highest security."
+      }
+    ],
+    "LOG-01": [
+      {
+        "check_id": "PA-LOG01-001",
+        "check_name": "System Logging Not Configured",
+        "binary_question": "Is syslog configured to forward system logs to a centralized log server?",
+        "pass_condition": "Syslog server profile exists and is assigned in device logging settings",
+        "fail_condition": "No syslog server configured or syslog profiles are not applied",
+        "evidence_source": "Syslog Server Profile and Device Logging Configuration",
+        "evidence_fields": ["syslog server IP", "port", "facility", "assigned to logging categories"],
+        "severity": "high",
+        "remediation": "Configure a syslog server profile with your SIEM IP/port. Apply the profile to all log categories: system, config, traffic, threat, hipmatch, and audit."
+      },
+      {
+        "check_id": "PA-LOG01-002",
+        "check_name": "Configuration Change Logging Not Enabled",
+        "binary_question": "Are configuration change events logged with committer identity?",
+        "pass_condition": "Configuration audit log is enabled and captures admin identity, timestamp, and change summary",
+        "fail_condition": "Configuration change logging is disabled or not forwarded",
+        "evidence_source": "Commit Audit Log and Device Logging Configuration",
+        "evidence_fields": ["config audit enabled", "syslog forwarding", "sample commit log entries"],
+        "severity": "high",
+        "remediation": "Enable configuration audit logging under Device > Log Settings. Forward config audit logs to SIEM. Require individual admin accounts (not shared) so committer identity is captured."
+      }
+    ],
+    "CFG-01": [
+      {
+        "check_id": "PA-CFG01-001",
+        "check_name": "No Hardening Baseline Applied",
+        "binary_question": "Has a security hardening baseline (CIS Benchmark or vendor guide) been applied?",
+        "pass_condition": "Device configuration shows evidence of hardening: management restrictions, secure protocols, strong passwords",
+        "fail_condition": "Default configuration with no hardening controls applied",
+        "evidence_source": "Device Configuration Export",
+        "evidence_fields": ["management interface settings", "permitted IP list", "service settings"],
+        "severity": "high",
+        "remediation": "Apply the CIS Benchmark for Palo Alto Networks or Palo Alto IRON hardening guide. Restrict management access, disable unused services, enforce strong authentication."
+      },
+      {
+        "check_id": "PA-CFG01-002",
+        "check_name": "Weak TLS Profile Configured",
+        "binary_question": "Are weak TLS versions (1.0, 1.1) or cipher suites prohibited on SSL/TLS service profiles?",
+        "pass_condition": "SSL/TLS service profiles enforce TLS 1.2 minimum with strong cipher suites",
+        "fail_condition": "TLS 1.0 or 1.1 is permitted in SSL/TLS service profiles",
+        "evidence_source": "SSL/TLS Service Profile Export",
+        "evidence_fields": ["profile name", "minimum TLS version", "cipher suites", "applied to"],
+        "severity": "high",
+        "remediation": "Update all SSL/TLS service profiles to enforce TLS 1.2 as minimum. Disable weak cipher suites (RC4, DES, 3DES, NULL, MD5). Apply strict profiles to management interface and GlobalProtect."
+      }
+    ],
+    "CFG-02": [
+      {
+        "check_id": "PA-CFG02-001",
+        "check_name": "Changes Without Ticket Reference",
+        "binary_question": "Do commit messages reference an approved change ticket?",
+        "pass_condition": "All commit log entries include a change ticket number or reference",
+        "fail_condition": "Commits exist without change ticket references or with generic/empty descriptions",
+        "evidence_source": "Commit Audit Log",
+        "evidence_fields": ["commit timestamp", "committer", "commit description", "ticket reference"],
+        "severity": "medium",
+        "remediation": "Enforce a change management policy requiring all commits to reference an ITSM ticket. Train administrators to include ticket numbers in commit descriptions. Implement Panorama automation to validate ticket references."
+      }
+    ],
+    "CFG-03": [
+      {
+        "check_id": "PA-CFG03-001",
+        "check_name": "Management Interface Exposed to Untrusted Networks",
+        "binary_question": "Is management interface access restricted to approved management IP ranges?",
+        "pass_condition": "Management interface has permitted-IP list configured and management traffic is restricted to dedicated management network",
+        "fail_condition": "Management interface permits access from any IP or from internet-facing networks",
+        "evidence_source": "Management Interface Configuration",
+        "evidence_fields": ["permitted IP list", "management services enabled", "interface zone"],
+        "severity": "critical",
+        "remediation": "Configure permitted-IP list on management interface. Place management interface on a dedicated out-of-band management network. Disable management access from data-plane interfaces."
+      },
+      {
+        "check_id": "PA-CFG03-002",
+        "check_name": "Unused Management Services Enabled",
+        "binary_question": "Are unused management services (Telnet, HTTP, SNMP with defaults) disabled?",
+        "pass_condition": "Only necessary management services are enabled: HTTPS, SSH. Telnet, HTTP disabled.",
+        "fail_condition": "Telnet, HTTP, or SNMP with default community strings are enabled",
+        "evidence_source": "Management Interface Service Configuration",
+        "evidence_fields": ["telnet enabled", "http enabled", "ssh enabled", "https enabled", "snmp community"],
+        "severity": "high",
+        "remediation": "Disable Telnet and HTTP on management interfaces. Use HTTPS and SSH only. Change SNMP community strings from defaults. Configure SNMPv3 with authentication."
+      }
+    ],
+    "CHG-01": [
+      {
+        "check_id": "PA-CHG01-001",
+        "check_name": "Unauthorized Configuration Changes",
+        "binary_question": "Are all configuration changes traceable to an approved change record?",
+        "pass_condition": "Commit log shows all changes include ticket references and named committer identities",
+        "fail_condition": "Changes exist without ticket references or performed outside change window",
+        "evidence_source": "Commit Audit Log and ITSM Change Records",
+        "evidence_fields": ["commit timestamp", "committer", "description", "ticket ID"],
+        "severity": "high",
+        "remediation": "Implement a change freeze process. Configure Panorama to require commit descriptions. Integrate with ITSM to validate change tickets before commits are applied."
+      }
+    ],
+    "CRY-01": [
+      {
+        "check_id": "PA-CRY01-001",
+        "check_name": "Weak TLS Permitted in Decryption Profile",
+        "binary_question": "Do SSL decryption profiles block connections using deprecated TLS versions?",
+        "pass_condition": "Decryption profiles block SSLv3, TLS 1.0, TLS 1.1 and enforce strong cipher suites",
+        "fail_condition": "Decryption profiles permit weak TLS versions or do not enforce cipher restrictions",
+        "evidence_source": "Decryption Profile Export",
+        "evidence_fields": ["profile name", "protocol restrictions", "cipher exclusions", "certificate verification"],
+        "severity": "high",
+        "remediation": "Update decryption profiles to block connections using SSLv3, TLS 1.0, and TLS 1.1. Exclude weak cipher suites (RC4, DES, NULL, EXPORT). Enable certificate verification."
+      }
+    ],
+    "IRO-01": [
+      {
+        "check_id": "PA-IRO01-001",
+        "check_name": "No Threat Alert Forwarding to SIEM",
+        "binary_question": "Are threat log events forwarded to a SIEM for incident detection?",
+        "pass_condition": "Threat logs are forwarded to SIEM via syslog/log forwarding profile with alert on high/critical severity",
+        "fail_condition": "Threat logs are local only and not forwarded to SIEM or alert platform",
+        "evidence_source": "Log Forwarding Profile and Threat Log Configuration",
+        "evidence_fields": ["forwarding destination", "severity filter", "log categories forwarded"],
+        "severity": "high",
+        "remediation": "Create a log forwarding profile that sends threat logs to your SIEM. Configure the SIEM with correlation rules to alert on high and critical severity threats within 15 minutes of detection."
+      }
+    ]
+  },
+  "sample_firewall_config": {
+    "description": "Example Palo Alto firewall configuration data for bottom-up assessment testing",
+    "security_rules": [
+      {
+        "name": "Allow-All-Outbound",
+        "source_zone": "trust",
+        "source_address": "any",
+        "destination_zone": "untrust",
+        "destination_address": "any",
+        "application": "any",
+        "service": "any",
+        "action": "allow",
+        "log_end": false,
+        "antivirus_profile": null,
+        "vulnerability_profile": null,
+        "spyware_profile": null,
+        "url_filtering_profile": null,
+        "hit_count": 45231,
+        "last_hit": "2026-06-02",
+        "disabled": false
+      },
+      {
+        "name": "Allow-HTTP-Inbound",
+        "source_zone": "untrust",
+        "source_address": "any",
+        "destination_zone": "dmz",
+        "destination_address": "10.10.10.50",
+        "application": "web-browsing",
+        "service": "application-default",
+        "action": "allow",
+        "log_end": true,
+        "antivirus_profile": "default",
+        "vulnerability_profile": "strict",
+        "spyware_profile": "strict",
+        "url_filtering_profile": null,
+        "hit_count": 12043,
+        "last_hit": "2026-06-03",
+        "disabled": false
+      },
+      {
+        "name": "Allow-Legacy-System",
+        "source_zone": "trust",
+        "source_address": "192.168.1.0/24",
+        "destination_zone": "untrust",
+        "destination_address": "any",
+        "application": "any",
+        "service": "any",
+        "action": "allow",
+        "log_end": false,
+        "antivirus_profile": null,
+        "vulnerability_profile": null,
+        "spyware_profile": null,
+        "url_filtering_profile": null,
+        "hit_count": 0,
+        "last_hit": null,
+        "disabled": false
+      }
+    ],
+    "admin_accounts": [
+      {
+        "username": "admin",
+        "role": "superuser",
+        "authentication_profile": "local",
+        "mfa_enabled": false,
+        "last_login": "2026-05-15"
+      },
+      {
+        "username": "netadmin",
+        "role": "superuser",
+        "authentication_profile": "local",
+        "mfa_enabled": false,
+        "last_login": "2026-06-01"
+      }
+    ],
+    "management_interface": {
+      "permitted_ips": [],
+      "telnet_enabled": false,
+      "http_enabled": true,
+      "https_enabled": true,
+      "ssh_enabled": true,
+      "snmp_enabled": true,
+      "snmp_community": "public"
+    },
+    "ssl_tls_profiles": [
+      {
+        "name": "Default-SSL-Profile",
+        "min_version": "tls1-0",
+        "max_version": "tls1-2",
+        "cipher_suites": ["RC4-MD5", "AES256-SHA256"]
+      }
+    ],
+    "log_settings": {
+      "syslog_servers": [],
+      "traffic_log_forwarding": false,
+      "threat_log_forwarding": false,
+      "config_audit_enabled": true
+    },
+    "zones": [
+      {"name": "trust", "type": "layer3", "protection_profile": null},
+      {"name": "untrust", "type": "layer3", "protection_profile": "default"},
+      {"name": "dmz", "type": "layer3", "protection_profile": null}
+    ]
+  }
+}

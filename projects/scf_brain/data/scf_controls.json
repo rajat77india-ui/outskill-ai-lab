@@ -1,0 +1,236 @@
+{
+  "controls": [
+    {
+      "id": "NET-01",
+      "name": "Network Segmentation",
+      "objective": "Networks must be segmented to limit lateral movement and contain the blast radius of security incidents. Systems must be grouped by trust level, function, and data sensitivity.",
+      "domain": "Network Security",
+      "sub_domain": "Network Architecture",
+      "description": "Implement network segmentation controls to separate systems based on sensitivity, function, and trust level. Define security zones and enforce traffic filtering between zones using firewalls or network access controls.",
+      "key_requirements": [
+        "Define security zones (e.g., DMZ, internal, management, production, development)",
+        "Enforce deny-by-default traffic policy between zones",
+        "Restrict inter-zone traffic to business-required flows only",
+        "Document and approve all cross-zone communication rules"
+      ]
+    },
+    {
+      "id": "NET-02",
+      "name": "Network Traffic Filtering",
+      "objective": "Network traffic must be controlled and filtered based on least privilege principles. Only explicitly authorized traffic flows should be permitted; all other traffic must be denied by default.",
+      "domain": "Network Security",
+      "sub_domain": "Traffic Control",
+      "description": "Deploy and configure firewalls, network access controls, and packet filtering to enforce traffic policies. Rules must be specific, documented, approved, and reviewed regularly to remove stale or overly permissive entries.",
+      "key_requirements": [
+        "Enforce deny-by-default on all network boundaries",
+        "Restrict rules to specific source/destination/service combinations",
+        "Prohibit any-any-any allow rules without documented exception",
+        "Review and recertify firewall rules on a defined schedule",
+        "Remove or disable unused and stale rules"
+      ]
+    },
+    {
+      "id": "NET-03",
+      "name": "Intrusion Detection and Prevention",
+      "objective": "Threats and anomalous network activity must be detected and blocked in real time. Security inspection must be applied to network traffic at all critical boundaries.",
+      "domain": "Network Security",
+      "sub_domain": "Threat Prevention",
+      "description": "Deploy IDS/IPS capabilities and attach threat prevention security profiles (antivirus, anti-spyware, vulnerability protection, URL filtering) to enforce security inspection on all relevant traffic flows.",
+      "key_requirements": [
+        "Attach threat prevention profiles to all security policy rules",
+        "Enable antivirus, anti-spyware, and vulnerability protection profiles",
+        "Enable URL filtering on outbound traffic",
+        "Configure IPS/IDS signatures and alert on high-severity events",
+        "Review threat log alerts regularly"
+      ]
+    },
+    {
+      "id": "NET-04",
+      "name": "Network Monitoring",
+      "objective": "Network activity must be continuously monitored to detect anomalies, unauthorized access, and security incidents. Traffic logs must provide a complete audit trail.",
+      "domain": "Network Security",
+      "sub_domain": "Monitoring",
+      "description": "Enable comprehensive traffic, threat, and system logging on all network security devices. Forward logs to a centralized SIEM for correlation, alerting, and retention.",
+      "key_requirements": [
+        "Enable traffic logging on all security policy rules",
+        "Enable threat logging and forward to SIEM",
+        "Retain logs for a minimum period aligned with regulatory requirements",
+        "Alert on high-severity threat events within defined SLA"
+      ]
+    },
+    {
+      "id": "IAC-01",
+      "name": "Privileged Account Management",
+      "objective": "Privileged accounts must be tightly controlled, minimized in count, and subject to enhanced authentication and monitoring to prevent unauthorized administrative access.",
+      "domain": "Identity and Access Control",
+      "sub_domain": "Privileged Access",
+      "description": "Enforce strict controls on privileged accounts including administrator accounts on network devices. Limit the number of local admin accounts, enforce role-based access control (RBAC), and monitor all privileged activity.",
+      "key_requirements": [
+        "Minimize the number of local privileged accounts",
+        "Enforce role-based access with least privilege",
+        "Disable default or shared administrative accounts",
+        "Log and audit all privileged account activity",
+        "Review privileged account assignments periodically"
+      ]
+    },
+    {
+      "id": "IAC-07",
+      "name": "Multi-Factor Authentication",
+      "objective": "Multi-factor authentication (MFA) must be enforced for all privileged access, remote access, and access to critical systems to prevent credential-based attacks.",
+      "domain": "Identity and Access Control",
+      "sub_domain": "Authentication",
+      "description": "Require MFA for administrator logins to network devices, remote management access, and VPN connections. MFA must be enforced at the authentication profile level and cannot be bypassed.",
+      "key_requirements": [
+        "Enforce MFA for all administrator accounts on network devices",
+        "Enforce MFA for remote access (VPN, SSH, HTTPS management)",
+        "Configure authentication profiles with RADIUS/LDAP + OTP or certificate",
+        "Disable password-only authentication for privileged access"
+      ]
+    },
+    {
+      "id": "IAC-09",
+      "name": "Access Review",
+      "objective": "User and account access rights must be reviewed and recertified at regular intervals to ensure that access remains appropriate and that stale accounts are revoked.",
+      "domain": "Identity and Access Control",
+      "sub_domain": "Access Governance",
+      "description": "Conduct periodic access reviews for all accounts including administrator accounts on network devices. Review admin roles, authentication settings, and VPN user accounts. Revoke access for terminated or role-changed personnel.",
+      "key_requirements": [
+        "Conduct quarterly or semi-annual access reviews for admin accounts",
+        "Revoke access for inactive or terminated users within defined SLA",
+        "Document access review results and approvals",
+        "Validate that assigned roles align with current job function"
+      ]
+    },
+    {
+      "id": "LOG-01",
+      "name": "Security Event Logging",
+      "objective": "Security-relevant events must be logged with sufficient detail to support incident investigation, forensic analysis, and compliance reporting.",
+      "domain": "Logging and Monitoring",
+      "sub_domain": "Log Generation",
+      "description": "Configure all security-relevant systems to generate logs for authentication events, configuration changes, policy matches, and threat detections. Logs must include timestamps, source/destination, action, and outcome.",
+      "key_requirements": [
+        "Log all authentication events (success and failure)",
+        "Log all configuration changes with committer identity",
+        "Log all security policy matches and actions",
+        "Log all detected threats with severity and action",
+        "Include source IP, destination IP, port, protocol in traffic logs"
+      ]
+    },
+    {
+      "id": "LOG-02",
+      "name": "Log Retention",
+      "objective": "Security logs must be retained for a sufficient period to support forensic investigation, regulatory compliance, and audit requirements.",
+      "domain": "Logging and Monitoring",
+      "sub_domain": "Log Management",
+      "description": "Establish and enforce log retention policies that meet regulatory and business requirements. Logs must be stored securely and protected from tampering. Minimum retention periods typically range from 90 days to 1 year or more depending on regulation.",
+      "key_requirements": [
+        "Retain security logs for a minimum of 90 days online and 1 year archived",
+        "Protect log integrity — logs must be immutable once written",
+        "Forward logs to a centralized, secure log management platform",
+        "Regularly verify that logging is active and logs are flowing"
+      ]
+    },
+    {
+      "id": "CFG-01",
+      "name": "Baseline Configuration",
+      "objective": "All systems must be configured according to approved security baselines and hardening standards. Deviations from baseline must be documented and approved.",
+      "domain": "Configuration Management",
+      "sub_domain": "Hardening",
+      "description": "Develop and maintain approved baseline configurations for all network devices based on industry benchmarks (CIS, DISA STIG, vendor security guides). Configurations must be documented, version-controlled, and applied consistently.",
+      "key_requirements": [
+        "Define and document approved baseline configuration for each device type",
+        "Apply CIS or vendor hardening benchmarks",
+        "Disable unused services, ports, and management interfaces",
+        "Enforce secure TLS/SSL profiles and cipher suites",
+        "Disable weak or deprecated cryptographic algorithms"
+      ]
+    },
+    {
+      "id": "CFG-02",
+      "name": "Configuration Change Control",
+      "objective": "All changes to system configurations must be controlled, authorized, tested, and documented before implementation to prevent unauthorized modifications and configuration drift.",
+      "domain": "Configuration Management",
+      "sub_domain": "Change Control",
+      "description": "Enforce a change management process for all configuration changes to network devices. Changes must be raised as formal change requests, reviewed and approved, tested where possible, and linked to a change ticket in the ITSM system.",
+      "key_requirements": [
+        "All configuration changes must be authorized via change management process",
+        "Changes must reference an approved change ticket",
+        "Commit logs must capture the committer identity and timestamp",
+        "Emergency changes must be reviewed within 24 hours of implementation",
+        "Configuration backups must be taken before changes"
+      ]
+    },
+    {
+      "id": "CFG-03",
+      "name": "Configuration Hardening",
+      "objective": "Network devices must be hardened to reduce attack surface. Unnecessary services, protocols, and features must be disabled. Strong authentication and encryption must be enforced.",
+      "domain": "Configuration Management",
+      "sub_domain": "Hardening",
+      "description": "Apply hardening controls to eliminate unnecessary attack surface on network devices. Disable unused management interfaces, enforce secure management protocols (HTTPS, SSH), configure strong password policies, and restrict management access to approved IP ranges.",
+      "key_requirements": [
+        "Restrict management interface access to approved management networks only",
+        "Disable insecure management protocols (Telnet, HTTP)",
+        "Enforce strong password complexity and rotation policies",
+        "Disable unused features and services",
+        "Apply strong TLS profile with approved cipher suites"
+      ]
+    },
+    {
+      "id": "CHG-01",
+      "name": "Change Authorization",
+      "objective": "All changes to production systems must be formally authorized before implementation. Unauthorized changes must be detected and reversed.",
+      "domain": "Change Management",
+      "sub_domain": "Change Approval",
+      "description": "Require formal approval for all changes to network device configurations. The change management process must include risk assessment, approval by an appropriate authority, and a rollback plan. Unauthorized changes must be detected through configuration monitoring.",
+      "key_requirements": [
+        "All changes must be formally approved before implementation",
+        "Change records must document approver, scope, and business justification",
+        "Changes outside the approved window must trigger an incident",
+        "Configuration drift from approved baseline must be detected and remediated"
+      ]
+    },
+    {
+      "id": "VUL-01",
+      "name": "Vulnerability Management",
+      "objective": "Vulnerabilities in systems must be identified, assessed, and remediated in a timely manner based on risk severity.",
+      "domain": "Vulnerability Management",
+      "sub_domain": "Vulnerability Identification",
+      "description": "Conduct regular vulnerability assessments of network devices. Monitor vendor security advisories and apply patches within defined SLA. High-severity vulnerabilities must be remediated with priority.",
+      "key_requirements": [
+        "Conduct vulnerability assessments at least quarterly",
+        "Monitor vendor security advisories for critical patches",
+        "Remediate critical vulnerabilities within 30 days, high within 60 days",
+        "Document vulnerability findings and remediation status"
+      ]
+    },
+    {
+      "id": "CRY-01",
+      "name": "Encryption Standards",
+      "objective": "Cryptographic algorithms and protocols must meet current security standards. Weak or deprecated algorithms must be prohibited.",
+      "domain": "Cryptography",
+      "sub_domain": "Encryption",
+      "description": "Enforce the use of strong, approved cryptographic algorithms for all encrypted communications and data storage. Prohibit the use of weak algorithms (MD5, SHA-1, DES, RC4, 3DES) and deprecated TLS versions (TLS 1.0, TLS 1.1, SSLv3).",
+      "key_requirements": [
+        "Enforce TLS 1.2 or higher for all encrypted communications",
+        "Prohibit SSLv3, TLS 1.0, and TLS 1.1",
+        "Use AES-128 or AES-256 for symmetric encryption",
+        "Prohibit DES, 3DES, RC4, and MD5 for security functions",
+        "Apply strong cipher suite configuration to all TLS profiles"
+      ]
+    },
+    {
+      "id": "IRO-01",
+      "name": "Incident Detection",
+      "objective": "Security incidents must be detected in a timely manner through monitoring, alerting, and threat intelligence to minimize dwell time and impact.",
+      "domain": "Incident Response",
+      "sub_domain": "Detection",
+      "description": "Deploy monitoring capabilities that generate alerts for security-relevant events. Integrate threat intelligence feeds and configure automated alerting for high-severity events. Threat logs must be reviewed regularly and acted upon within defined SLA.",
+      "key_requirements": [
+        "Generate real-time alerts for high-severity threat events",
+        "Monitor threat logs and investigate alerts within defined SLA",
+        "Integrate threat intelligence into detection capabilities",
+        "Track and document all security incidents"
+      ]
+    }
+  ]
+}

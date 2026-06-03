@@ -1,0 +1,164 @@
+{
+  "crosswalk": {
+    "NET-01": {
+      "scf_id": "NET-01",
+      "nist_800_53": ["SC-7", "SC-7(5)", "SC-7(8)", "CA-3", "CA-9"],
+      "cis_controls_v8": ["CIS-12.2", "CIS-12.3", "CIS-13.4"],
+      "iso_27001_2022": ["A.8.20", "A.8.22"],
+      "pci_dss_v4": ["PCI-1.2", "PCI-1.3", "PCI-1.3.1"],
+      "nist_description": "Boundary Protection | Restrict Outgoing Communications | Implement Managed Interfaces",
+      "cis_description": "Establish and Maintain a Secure Network Architecture",
+      "pci_description": "Restrict inbound and outbound traffic to only that which is necessary"
+    },
+    "NET-02": {
+      "scf_id": "NET-02",
+      "nist_800_53": ["SC-7", "SC-7(5)", "AC-4", "AC-17", "CM-7"],
+      "cis_controls_v8": ["CIS-12.1", "CIS-12.2", "CIS-13.1"],
+      "iso_27001_2022": ["A.8.20", "A.8.21", "A.8.23"],
+      "pci_dss_v4": ["PCI-1.2.1", "PCI-1.3.2", "PCI-1.3.3"],
+      "nist_description": "Boundary Protection | Deny by Default | Information Flow Enforcement",
+      "cis_description": "Manage Firewall Rules | Network Traffic Filtering",
+      "pci_description": "Deny all traffic not explicitly allowed; restrict inbound/outbound"
+    },
+    "NET-03": {
+      "scf_id": "NET-03",
+      "nist_800_53": ["SI-3", "SI-4", "SC-7(10)", "SC-44"],
+      "cis_controls_v8": ["CIS-10.1", "CIS-13.2", "CIS-13.3"],
+      "iso_27001_2022": ["A.8.7", "A.8.16", "A.8.20"],
+      "pci_dss_v4": ["PCI-5.2", "PCI-6.3.3", "PCI-12.10"],
+      "nist_description": "Malicious Code Protection | System Monitoring | Intrusion Detection",
+      "cis_description": "Deploy and Manage Anti-Malware Software | Network IDS/IPS",
+      "pci_description": "Protect all systems against malware; use IDS/IPS at critical points"
+    },
+    "NET-04": {
+      "scf_id": "NET-04",
+      "nist_800_53": ["AU-2", "AU-12", "SI-4", "SI-4(4)"],
+      "cis_controls_v8": ["CIS-8.1", "CIS-8.2", "CIS-13.6"],
+      "iso_27001_2022": ["A.8.15", "A.8.16"],
+      "pci_dss_v4": ["PCI-10.2", "PCI-10.3", "PCI-10.6"],
+      "nist_description": "Audit Events | Audit Record Generation | System Monitoring",
+      "cis_description": "Establish and Maintain an Audit Log Management Process",
+      "pci_description": "Implement audit logging to reconstruct security events"
+    },
+    "IAC-01": {
+      "scf_id": "IAC-01",
+      "nist_800_53": ["AC-2", "AC-6", "AC-6(1)", "AC-6(5)", "IA-2(1)"],
+      "cis_controls_v8": ["CIS-5.4", "CIS-5.5", "CIS-6.2"],
+      "iso_27001_2022": ["A.5.15", "A.5.18", "A.8.2"],
+      "pci_dss_v4": ["PCI-7.2", "PCI-8.2", "PCI-8.6"],
+      "nist_description": "Account Management | Least Privilege | Privileged Accounts",
+      "cis_description": "Use Unique Passwords | Establish and Maintain an Inventory of Accounts",
+      "pci_description": "Implement strong access control; manage user IDs and authentication"
+    },
+    "IAC-07": {
+      "scf_id": "IAC-07",
+      "nist_800_53": ["IA-2", "IA-2(1)", "IA-2(2)", "IA-2(12)"],
+      "cis_controls_v8": ["CIS-6.3", "CIS-6.5"],
+      "iso_27001_2022": ["A.5.17", "A.8.5"],
+      "pci_dss_v4": ["PCI-8.4", "PCI-8.4.2", "PCI-8.4.3"],
+      "nist_description": "Identification and Authentication | MFA for Privileged Accounts",
+      "cis_description": "Require MFA for Externally-Exposed Applications and Admin Access",
+      "pci_description": "MFA for all non-console access into the CDE; MFA for all admin access"
+    },
+    "IAC-09": {
+      "scf_id": "IAC-09",
+      "nist_800_53": ["AC-2(4)", "AC-2(9)", "AC-2(12)", "PM-10"],
+      "cis_controls_v8": ["CIS-5.1", "CIS-6.1", "CIS-6.7"],
+      "iso_27001_2022": ["A.5.18", "A.8.2", "A.8.3"],
+      "pci_dss_v4": ["PCI-7.2.5", "PCI-8.2.4", "PCI-8.6.3"],
+      "nist_description": "Account Management | Automated Audit Actions | Account Monitoring",
+      "cis_description": "Establish and Maintain an Account Inventory | Periodic Access Reviews",
+      "pci_description": "Review user accounts at least every 6 months; remove inactive accounts"
+    },
+    "LOG-01": {
+      "scf_id": "LOG-01",
+      "nist_800_53": ["AU-2", "AU-3", "AU-3(1)", "AU-12", "AU-14"],
+      "cis_controls_v8": ["CIS-8.2", "CIS-8.5", "CIS-8.7"],
+      "iso_27001_2022": ["A.8.15", "A.8.17"],
+      "pci_dss_v4": ["PCI-10.2.1", "PCI-10.3", "PCI-10.5"],
+      "nist_description": "Event Logging | Content of Audit Records | Audit Record Generation",
+      "cis_description": "Collect Audit Logs | Ensure Adequate Audit Log Storage",
+      "pci_description": "Log all access to system components and cardholder data"
+    },
+    "LOG-02": {
+      "scf_id": "LOG-02",
+      "nist_800_53": ["AU-9", "AU-9(2)", "AU-11", "AU-11(1)"],
+      "cis_controls_v8": ["CIS-8.3", "CIS-8.10"],
+      "iso_27001_2022": ["A.8.15"],
+      "pci_dss_v4": ["PCI-10.5", "PCI-10.7"],
+      "nist_description": "Protection of Audit Information | Audit Record Retention",
+      "cis_description": "Ensure Adequate Audit Log Storage | Retain Audit Logs",
+      "pci_description": "Retain audit logs for at least 12 months; at least 3 months available for analysis"
+    },
+    "CFG-01": {
+      "scf_id": "CFG-01",
+      "nist_800_53": ["CM-2", "CM-2(1)", "CM-6", "CM-6(1)"],
+      "cis_controls_v8": ["CIS-4.1", "CIS-4.2", "CIS-12.1"],
+      "iso_27001_2022": ["A.8.9"],
+      "pci_dss_v4": ["PCI-2.2", "PCI-2.2.1"],
+      "nist_description": "Baseline Configuration | Configuration Change Control | Configuration Settings",
+      "cis_description": "Establish and Maintain a Secure Configuration Process",
+      "pci_description": "Develop configuration standards for all system components"
+    },
+    "CFG-02": {
+      "scf_id": "CFG-02",
+      "nist_800_53": ["CM-3", "CM-3(1)", "CM-3(2)", "CM-5"],
+      "cis_controls_v8": ["CIS-4.1", "CIS-4.3"],
+      "iso_27001_2022": ["A.8.32"],
+      "pci_dss_v4": ["PCI-6.5", "PCI-6.5.1", "PCI-6.5.2"],
+      "nist_description": "Configuration Change Control | Automated Change Tracking | Access Restrictions",
+      "cis_description": "Implement a Change Management Process",
+      "pci_description": "Implement change and configuration management processes"
+    },
+    "CFG-03": {
+      "scf_id": "CFG-03",
+      "nist_800_53": ["CM-6", "CM-7", "CM-7(1)", "SC-8", "SC-28"],
+      "cis_controls_v8": ["CIS-4.1", "CIS-4.8", "CIS-12.7"],
+      "iso_27001_2022": ["A.8.8", "A.8.9"],
+      "pci_dss_v4": ["PCI-2.2.6", "PCI-2.2.7", "PCI-4.2.1"],
+      "nist_description": "Configuration Settings | Least Functionality | Cryptographic Protection",
+      "cis_description": "Disable Unnecessary Services | Configure Trusted DNS Servers",
+      "pci_description": "Protect all system components from known vulnerabilities; disable unnecessary functions"
+    },
+    "CHG-01": {
+      "scf_id": "CHG-01",
+      "nist_800_53": ["CM-3", "CM-4", "CM-5", "CM-9"],
+      "cis_controls_v8": ["CIS-4.3", "CIS-4.11"],
+      "iso_27001_2022": ["A.5.37", "A.8.32"],
+      "pci_dss_v4": ["PCI-6.5.1", "PCI-6.5.3", "PCI-6.5.5"],
+      "nist_description": "Configuration Change Control | Security Impact Analysis | Access Restrictions",
+      "cis_description": "Implement a Change Management Process | Perform Application Layer Filtering",
+      "pci_description": "Manage security impacts of change; test before production deployment"
+    },
+    "VUL-01": {
+      "scf_id": "VUL-01",
+      "nist_800_53": ["RA-3", "RA-5", "RA-5(1)", "SI-2"],
+      "cis_controls_v8": ["CIS-7.1", "CIS-7.4", "CIS-7.5"],
+      "iso_27001_2022": ["A.8.8"],
+      "pci_dss_v4": ["PCI-6.3", "PCI-6.3.1", "PCI-11.3"],
+      "nist_description": "Risk Assessment | Vulnerability Monitoring and Scanning | Flaw Remediation",
+      "cis_description": "Perform Automated Vulnerability Scans | Remediate Detected Vulnerabilities",
+      "pci_description": "Scan for vulnerabilities at least quarterly; remediate within defined SLA"
+    },
+    "CRY-01": {
+      "scf_id": "CRY-01",
+      "nist_800_53": ["SC-8", "SC-8(1)", "SC-13", "SC-28"],
+      "cis_controls_v8": ["CIS-3.10", "CIS-12.8"],
+      "iso_27001_2022": ["A.8.24"],
+      "pci_dss_v4": ["PCI-4.2.1", "PCI-4.2.1.1", "PCI-4.2.2"],
+      "nist_description": "Transmission Confidentiality and Integrity | Cryptographic Protection",
+      "cis_description": "Encrypt Sensitive Data in Transit | Use Only Approved Cryptography",
+      "pci_description": "Use strong cryptography for transmission of cardholder data; prohibit weak protocols"
+    },
+    "IRO-01": {
+      "scf_id": "IRO-01",
+      "nist_800_53": ["IR-4", "IR-5", "IR-6", "SI-4"],
+      "cis_controls_v8": ["CIS-17.1", "CIS-17.4"],
+      "iso_27001_2022": ["A.5.24", "A.5.25", "A.5.26"],
+      "pci_dss_v4": ["PCI-10.7", "PCI-12.10"],
+      "nist_description": "Incident Handling | Incident Monitoring | Incident Reporting | System Monitoring",
+      "cis_description": "Establish and Maintain a Security Incident Response Process",
+      "pci_description": "Implement an incident response plan; be prepared to respond to a system breach"
+    }
+  }
+}
