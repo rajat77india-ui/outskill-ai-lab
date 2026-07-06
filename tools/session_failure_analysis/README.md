@@ -8,6 +8,11 @@ them by rage, by time/token cost, and by recurrence.
 The transcripts live **only on your local machine(s)** — cloud sessions cannot
 see them. This directory contains the collector you run locally.
 
+**Easiest path:** run `claude` locally in this repo and invoke
+`/pushback-audit` (defined in `.claude/skills/pushback-audit/`). It runs this
+collector, verifies candidates, clusters them into failure mechanisms, and
+writes the ranked report end to end.
+
 ## Where each tool keeps its history
 
 | Tool | Location |
