@@ -26,10 +26,11 @@ events.
 
 ## Phase 1 — Collect
 
-Run the collector from the repo root (stdlib-only, safe, read-only):
+Run the collector bundled in this skill's own directory (stdlib-only, safe,
+read-only) — resolve the path relative to this SKILL.md file:
 
 ```bash
-python3 tools/session_failure_analysis/collect_transcripts.py
+python3 <this-skill-directory>/collect_transcripts.py
 ```
 
 It writes `session_failure_analysis_out/` with `events.jsonl` (every user
